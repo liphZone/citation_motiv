@@ -2,6 +2,7 @@
 @section('title','Ajout Administrateur')
 @section('content')
 <div class="col-md-12">
+    <h3 class="text-center"> AJOUTER ADMINISTRATEUR </h3>
     <form action="{{ route('personnes.store') }}" method="post">
         @csrf
         <div class="form-group">

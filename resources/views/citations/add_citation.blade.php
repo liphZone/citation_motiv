@@ -2,6 +2,7 @@
 @section('title','Ajout citation')
 @section('content')
 <div class="col-md-12">
+    <h3 class="text-center"> AJOUTER UNE CITATION </h3>
     <form action="{{ route('citations.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="form-group">

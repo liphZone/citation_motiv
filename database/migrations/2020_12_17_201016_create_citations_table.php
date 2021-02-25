@@ -22,6 +22,7 @@ class CreateCitationsTable extends Migration
             $table->string('date');
             $table->integer('etat')->default(0);
             $table->unsignedBigInteger('user_id')->index()->nullable();
+            $table->string('type_utilisateur');
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');

@@ -6,7 +6,7 @@
   Thèmes de citations en rapport : <a style="text-decoration: none" href="{{ route('single_subject',$quote->categorie) }}"> #{{ $quote->categorie }}</a>
 </div>
 
-<div class="card mt-4">
+<div class="card mt-4 mb-4">
   <div> 
     <img src="{{$watermark}}" alt="{{ $quote->auteur }}" height="auto;" width="auto;">
   </div>
@@ -15,59 +15,35 @@
       <i class="fa fa-heart" aria-hidden="true"></i>
     </small>
     <div style="float: right;">
-      <i title="Liker" class="fa fa-heart" aria-hidden="true"></i>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <i title="Facebook" class="fa fa-facebook" aria-hidden="true"></i> 
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <i title="Twitter" class="fa fa-twitter" aria-hidden="true"></i>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <i title="What's App" class="fa fa-whatsapp" aria-hidden="true"></i>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <i title="Pinterest" class="fa fa-pinterest" aria-hidden="true"></i>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <i title="Télécharger" class="fa fa-download" aria-hidden="true"></i>
+      <a href="{{ route('download',$quote->id) }}"> <i title="Télécharger" class="fa fa-download" aria-hidden="true"></i> </a>
+      
     </div>
   </div>
 </div> 
-<hr>
-<div>
   <h3> Citations similaires </h3>
-  <div class="row">
-    <div class="col-md-5">
-      <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="card-link">Card link</a>
-          <a href="#" class="card-link">Another link</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-7">
-      <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="card-link">Card link</a>
-          <a href="#" class="card-link">Another link</a>
+
+  <div class="card-columns">
+
+    @foreach ($other_quote as $quote)
+
+      <div class="card border-dark mb-3" style="max-width: 18rem;">
+        <div class="card-body text-dark">
+          <h5 class="card-title"> 
+            <a href="{{ route('single_citation',$quote->id) }}" style="text-decoration:none;color:black;"> 
+              &#96;&#96;{{ $quote->citation }}&#180;&#180; 
+            </a>  
+          </h5>
+          <p class="card-text">
+             <a href="#" class="text-decoration-none text-primary"> 
+              - {{ $quote->auteur }}
+             </a></p>
         </div>
       </div>
 
-      <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="card-link">Card link</a>
-          <a href="#" class="card-link">Another link</a>
-        </div>
-      </div>
-    </div>
+    @endforeach
+
   </div>
 
-</div>
 <!-- /.card -->
  
 @endsection

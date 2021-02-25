@@ -74,6 +74,7 @@ Route::resource('personnes',PersonneController::class)->names(
 [
     'index'  => 'list_persons',
     'create' => 'add_person',
+    'edit'   => 'edit_person'
 ]);
 
 //Resource Categorie
@@ -93,12 +94,12 @@ Route::resource('citations',CitationController::class)->names(
     'show'   => 'single_citation'
 ]);
 
-   //Resource Like
-   Route::resource('likes',LikeController::class)->names(
-    [
-        'index'  => 'list_likes',
-        'create' => 'add_like',
-    ]);
+//Resource Like
+Route::resource('likes',LikeController::class)->names(
+[
+    'index'  => 'list_likes',
+    'create' => 'add_like',
+]);
 
     
 //GROUPE MIDDLEWARE **************************************
@@ -107,8 +108,10 @@ Route::resource('citations',CitationController::class)->names(
  
 // });
 
-Route::get('citation/{id}',[PageController::class,'fakeDeleteCitation'])->name('fake_delete_citation');
+Route::get('supprimer/{id}',[PageController::class,'fakeDeleteCitation'])->name('fake_delete_citation');
 
+//telecharger image
+Route::get('citation/{id}',[PageController::class,'telechargerImage'])->name('download');
 
 //Deconnexion
 Route::get('/deconnexion',[PageController::class,'deconnexion'])->name('deconnexion');

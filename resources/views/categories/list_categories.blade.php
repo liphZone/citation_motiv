@@ -30,23 +30,15 @@
                         <td>{{ $categories->reference_categorie }} </td>
                         <td>{{ $categories->libelle_categorie }} </td>
                         <td> 
-                            <div class="row">
-                                <div class="col-md-4">
-                                </div>
-                                <div class="col-md-2">
-                                    <a class="btn btn-success" href="{{route('edit_categorie',$categories->id)}}"> Modifier </a> 
-                                </div>
-                                <div class="col-md-2">
-                                    <form action="{{ route('categories.destroy',$categories->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                        <input class="btn btn-danger" onclick="return Action()" type="submit" value="Supprimer"> 
-                                    </form>
-                                </div>
-                                <div class="col-md-4">
-                                </div>
+                            <div class="d-flex justify-content-start">
+                                <a class="btn btn-success" href="{{route('edit_categorie',$categories->id)}}"> Modifier </a> 
+                                &nbsp;
+                                <form action="{{ route('categories.destroy',$categories->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input class="btn btn-danger" onclick="return Action()" type="submit" value="Supprimer"> 
+                                </form>
                             </div>
-                            
                         </td>
                     </tr>
                 @endforeach

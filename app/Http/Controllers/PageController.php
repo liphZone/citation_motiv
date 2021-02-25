@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Like;
 use App\Models\User;
 use App\Models\Citation;
 use App\Models\Personne;
@@ -11,9 +10,12 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use MercurySeries\Flashy\Flashy;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image;
 use App\Http\Requests\UserFormRequest;
+use Illuminate\Support\Facades\Response;
 use App\Http\Requests\PersonneFormRequest;
 use App\Http\Requests\ConnexionFormRequest;
+
 
 class PageController extends Controller
 {
@@ -36,7 +38,26 @@ class PageController extends Controller
     }
 
     public function accueilUtilisateur(){
-        return view('layout.utilisateur.accueil');
+        //Total categories
+        $count_categorie = Categorie::count();
+
+        //Total citations (ayant etat = 0)
+        $count_citation = Citation::where('etat',0)->count();
+
+        //Total citations utilisateur connecté
+        $my_quote = Citation::where('etat',0)->where('user_id',auth()->user()->id)->count();
+
+        //Total d'utilisateur enregistres
+        $user = User::count();
+
+        //Total citation administrateurs
+        $count_citation_admin = Citation::where('etat',0)->where('type_utilisateur','Admin')->count();
+
+        //Total citation clients
+        $count_citation_client = Citation::where('etat',0)->where('type_utilisateur','Client')->count();
+
+        return view('layout.utilisateur.accueil',compact('count_categorie','count_citation','my_quote','user',
+        'count_citation_admin','count_citation_client'));
     }
 
     public function monCompte(){
@@ -45,15 +66,29 @@ class PageController extends Controller
     }
 
     public function updateMonCompte(){
-        $user = Personne::where('id',auth()->user()->personne_id)->first();
+        $person = Personne::where('id',auth()->user()->personne_id)->first();
+        $user = User::where('id',auth()->user()->personne_id)->first();
 
-        $maj = $user->update([
-            'nom'     => request('nom'),
-            'prenom'  => request('prenom'),
-            'contact' => request('contact'),
-            'email'   => request('email'),
-            'adresse' => request('adresse'),
-        ]);
+        if ($user->email === request('email')) {
+            $maj = $person->update([
+                'nom'     => request('nom'),
+                'prenom'  => request('prenom'),
+                'contact' => request('contact'),
+                'adresse' => request('adresse'),
+            ]);
+        }elseif ($user->email != request('email')) {
+            $maj = $person ->update([
+                'nom'     => ucfirst(request('nom')),
+                'prenom'  => request('prenom'),
+                'contact' => request('contact'),
+                'email'   => request('email'),
+                'adresse' => request('adresse'),
+            ]);
+            $maj = $user->update([
+                'email' => request('email')
+            ]);
+        }
+
 
         if ($maj) {
             Flashy::success('Modification réussie');
@@ -170,6 +205,15 @@ class PageController extends Controller
         ]);
         Flashy::success('Votre poste a été supprimé');
         return back();
+    }
+
+    //Telecharger l'image
+    public function telechargerImage($id){
+        $quote   = Citation::findOrFail($id);
+        $random = Str::random(4);
+        $file= 'Zone/Quote_picture/'.$id.'.jpg';
+        $headers = array('Content-Type: image/jpg');
+        return Response::download($file, $random.'.png',$headers);
     }
 
     public function deconnexion(){

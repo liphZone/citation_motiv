@@ -94,7 +94,8 @@ class PersonneController extends Controller
      */
     public function edit($id)
     {
-        //
+        $personne = Personne::findOrFail($id);
+        return view('personnes.edit_person',compact('personne'));
     }
 
     /**
@@ -106,7 +107,43 @@ class PersonneController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'nom'     => 'required|string',
+            'prenom'  => 'required|string',
+            'contact' => 'required|string',
+            'adresse' => 'required',
+        ]);
+
+        $citation = Personne::findOrFail($id);
+        $user = User::findOrFail($id);
+
+        if ($citation->email === $request->email ) {
+            $update = $citation ->update([
+                'nom'     => ucfirst($request->nom),
+                'prenom'  => $request->prenom,
+                'contact' => $request->contact,
+                'adresse' => $request->adresse,
+            ]);
+        }elseif ($citation->email != $request->email) {
+            $update = $citation ->update([
+                'nom'     => ucfirst($request->nom),
+                'prenom'  => $request->prenom,
+                'contact' => $request->contact,
+                'email'   => $request->email,
+                'adresse' => $request->adresse,
+            ]);
+            $update = $user->update([
+                'email' => $request->email
+            ]);
+        }
+
+        if ($update) {
+           Flashy::success('Modification réussie');
+           return redirect()->route('list_persons');
+        }else{
+            Flashy::error("Echec de modification !");
+            return back();
+        }
     }
 
     /**
@@ -117,6 +154,13 @@ class PersonneController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = Personne::destroy($id);
+        if ($delete) {
+            Flashy::success('Vous avez supprimé un utilisateur');
+            return back();
+        } else {
+            Flashy::error('Echec de suppression');
+            return back();
+        }
     }
 }

@@ -1,8 +1,9 @@
 @extends('layout.utilisateur.index')
 @section('title','Modifier citation')
 @section('content')
-<h3 class="text-center"> Modifier ma citation </h3>
+
 <div class="col-md-12">
+    <h3 class="text-center"> MODIFIER CITATION </h3>
     <form action="{{ route('citations.update',$citation->id) }}" method="post">
         @csrf
         @method('put')

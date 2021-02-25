@@ -5,7 +5,12 @@
 <div class="col-md-12">
     <div class="card mb-4">
         <div class="card-header">
-            VOS CITATIONS | Nom d'utilisateur : {{ auth()->user()->name }}
+            <h5 class="text-center"> 
+                <a href="{{ route('add_citation') }}" style="float: left;" type="button" class="btn btn-success"> 
+                    <i class="fa fa-plus"> </i> Poster une citation 
+                </a> 
+                VOS CITATIONS | Nom d'utilisateur : {{ auth()->user()->name }} 
+            </h5>
         </div>
     </div>
 </div>
@@ -25,9 +30,14 @@
                             </div>
                             <div> <em> "{{ $citations->citation }}" </em> </div>
                         </div>
-                        <div class="col-auto">
+                        <div class="d-flex justify-content-start">
                             <a href="{{ route('edit_citation',$citations->id) }}" class="btn btn-success"> Modifier </a>
-                            <button class="btn btn-danger">Supprimer</button>
+                            &nbsp;
+                            <form action="{{ route('citations.destroy',$citations->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <input class="btn btn-danger" onclick="return ActionDelete()" type="submit" value="Supprimer"> 
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -46,12 +56,16 @@
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1"> Auteur : {{ $fake_quote->auteur }} | Etat : <span style="color: green;"> supprimé </span> </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 <img src="/Zone/{{ $fake_quote->profil }}" alt="" style="border-radius: 40px;" height="60px;" width="60px;">
-                                <h5> <b>Catégorie : {{ $fake_quote->categorie }} </b>  </h5> 
+                                <h5> <b> Catégorie : {{ $fake_quote->categorie }} </b>  </h5> 
                             </div>
                             <div> <em> "{{ $fake_quote->citation }}" </em> </div>
                         </div>
                         <div class="col-auto">
-                            <button class="btn btn-outline-danger"> Suppression définitive </button>
+                            <form action="{{ route('citations.destroy',$fake_quote->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <input class="btn btn-outline-danger" onclick="return ActionDelete()" type="submit" value="Suppression définitive"> 
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -80,8 +94,8 @@
                                 <div>  <em> "{{ $clients->citation }} " </em> </div>
                             </div>
                             <div class="col-auto">
-                                <a href="{{ route('edit_citation',$citations->id) }}" class="btn btn-success"> Modifier </a>
-                                <a href="{{ route('fake_delete_citation',$clients->id) }}" onclick="ActionFakeDelete()" type="button" class="btn btn-danger"> Supprimer </a>
+                                <a href="{{ route('edit_citation',$clients->id) }}" class="btn btn-success"> Modifier </a>
+                                <a href="{{ route('fake_delete_citation',$clients->id) }}" onclick="return ActionFakeDelete()" type="button" class="btn btn-danger"> Supprimer </a>
                             </div>
                         </div>
                     </div>
@@ -91,13 +105,27 @@
     @endforeach
 @endif
 
- <script>            
-    function ActionFakeDelete() {
-        var r = confirm("Voulez-vous supprimer cette citation ?");
+ <script>  
+
+    function ActionDelete()
+    {
+        var r = confirm("Voulez-vous definitivement supprimer cette citation ?");
         if (r == false) {
             return false;
         }
+
     }
+
+    function ActionFakeDelete()
+    {
+        var r = confirm("Voulez-vous definitivement supprimer cette citation ?");
+        if (r == false) {
+            return false;
+        }
+
+    }
+
+
 </script>
 
 @endsection

@@ -17,7 +17,8 @@ class Citation extends Model
         'profil',
         'date',
         'etat',
-        'user_id'
+        'user_id',
+        'type_utilisateur'
     ];
 
     public function likes(){

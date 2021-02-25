@@ -2,7 +2,7 @@
  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('accueil') }}">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
@@ -33,12 +33,11 @@
     @if (auth()->user()->type_utilisateur === 'Admin')
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
             <i class="fas fa-fw fa-cog"></i>
-            <span>Administrateur</span>
+            <span> Utilisateurs </span>
         </a>
         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('add_person') }} ">Ajouter admin</a>
-                <a class="collapse-item" href="{{ route('list_persons') }} "> Liste des admins</a>
+                <a class="collapse-item" href="{{ route('list_persons') }} "> liste des utilisateurs </a>
             </div>
         </div>
     @endif

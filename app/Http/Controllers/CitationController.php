@@ -27,15 +27,12 @@ class CitationController extends Controller
         //Liste des fausses citations supprimées par l'utilisateur
         $citation_fake_delete = Citation::where('etat',1)->get();
 
-        //Nombre de citations supprimées par l'utilisateur
+        //Total citation de l'utilisateur connecté
         $nombre_citation  = Citation::where('user_id',auth()->user()->id)->where('etat',0)->count();
 
         //Citation des clients
         $client = Citation::where('etat',0)->where('user_id',auth()->user()->id)->get();
 
-        $mot = 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos minus, neque, alias ipsa accusamus adipisci, sint cumque est eum praesentium amet? Numquam earum exercitationem illo dolores laudantium iste dolor voluptate.';
-        $count = Str::length($mot);
-        // dd($count);
         return view('citations.list_citations',compact('citation','citation_fake_delete','nombre_citation','client'));
     }
 
@@ -71,9 +68,10 @@ class CitationController extends Controller
             'citation'  => $request->citation,
         ],
         [
-            'profil'    => $image_name,
-            'date'      => date('Y-m-d'),
-            'user_id'   => Auth::user()->id,
+            'profil'           => $image_name,
+            'date'             => date('Y-m-d'),
+            'user_id'          => Auth::user()->id,
+            'type_utilisateur' => Auth::user()->type_utilisateur
         ]);
 
         if ($citation) {
@@ -95,7 +93,8 @@ class CitationController extends Controller
     {
         //Definir 150 mot maximum pour la citation
         $quote       = Citation::findOrFail($id);
-        $mot         = "&#8220; ".$quote->citation." &#8221;" . "\n  \n". '- '.$quote->auteur;
+        $auteur      = '-'.$quote->auteur;
+        $mot         = "&#8220; ".$quote->citation." &#8221;" . "\n  \n". "\n" .$auteur;
         $mot_sub1    = Str::of($mot)->substr(0,50);
         $mot_sub2    = Str::of($mot)->substr(50,1000);
         $mot_complet = $mot_sub1."\n".$mot_sub2;
@@ -111,12 +110,18 @@ class CitationController extends Controller
            $font->angle(0);  
        });  
      
-        // $img->save('Zone/text_with_image.jpg');  
+        $img->save('Zone/Quote_picture/'.$id.'.jpg');  
         $img->encode('png');
         $type = 'png';
         $watermark = 'data:image/' . $type . ';base64,' . base64_encode($img);
 
-        return view('citations.single_citation',compact('quote','watermark'));
+
+
+        //autres citations que celle qui est selectionnée
+        $quote_all = Citation::where('etat',0)->get();
+        $other_quote = $quote_all->except($id);
+
+        return view('citations.single_citation',compact('quote','watermark','other_quote'));
     }
 
     /**
@@ -170,6 +175,13 @@ class CitationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = Citation::destroy($id);
+        if ($delete) {
+            Flashy::success('Vous avez supprimé une citation');
+            return back();
+        } else {
+            Flashy::error('Echec de suppression');
+            return back();
+        }
     }
 }

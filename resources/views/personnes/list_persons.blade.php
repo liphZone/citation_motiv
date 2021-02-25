@@ -2,10 +2,10 @@
 @section('title','Liste des administrateurs')
 @section('content')
 <div class="col-md-12">
-    <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary"> LISTE DES ADMINISTRATEURS </h6>
+        <h6 class="m-0 font-weight-bold text-primary"> <a href="{{ route('add_person') }}" type="button" class="btn btn-success"> <i class="fa fa-plus"></i> Ajouter un administrateur </a> </h6>
+        <h6 class="text-center">  LISTE DES UTILISATEURS </h6>
         </div>
         <div class="card-body">
         <div class="table-responsive">
@@ -42,8 +42,15 @@
                         <td> {{ $personnes->email }} </td>
                         <td> {{ $personnes->type_utilisateur }} </td>
                         <td>
-                            <button class="btn btn-success">Modifier</button>
-                            <button class="btn btn-danger">Supprimer</button>
+                            <div class="d-flex justify-content-start">
+                                <a href="{{ route('edit_person',$personnes->id) }}" class="btn btn-success"> Modifier </a>
+                                &nbsp;
+                                <form action="{{ route('personnes.destroy',$personnes->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input class="btn btn-danger" onclick="ActionDelete()" type="submit" value="Supprimer"> 
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 @endforeach
@@ -53,4 +60,15 @@
         </div>
     </div>
 </div>
+
+<script>  
+
+    function ActionDelete() {
+        var r = confirm("Voulez-vous definitivement supprimer cette citation ?");
+        if (r == false) {
+            return false;
+        }
+    }
+
+</script>
 @endsection
